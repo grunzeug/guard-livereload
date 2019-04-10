@@ -508,8 +508,26 @@
 
        Reloader.prototype.reloadPage = function() {
          if (typeof Turbolinks === 'object') {
-           Turbolinks.enableTransitionCache();
-           return Turbolinks.visit(this.window.document.location);
+            var scrollPosition;
+            var focusId;
+
+            document.addEventListener('turbolinks:before-render', function () {
+              scrollPosition = [window.scrollX, window.scrollY];
+              focusId = document.activeElement.id;
+            });
+
+            document.addEventListener('turbolinks:load', function () {
+              if (scrollPosition) {
+                window.scrollTo.apply(window, scrollPosition);
+                scrollPosition = null;
+              }
+              if (focusId) {
+                document.getElementById(focusId).focus();
+                focusId = null;
+              }
+            });
+
+            Turbolinks.visit(window.location.toString(), {action: 'replace'});
          } else {
            return this.window.document.location.reload();
          }

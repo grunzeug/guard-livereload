@@ -604,7 +604,7 @@
          _results = [];
          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
            link = _ref[_i];
-           if (link.rel.toLowerCase() === 'stylesheet' && !link.__LiveReload_pendingRemoval) {
+           if (link.rel.toLowerCase() === 'stylesheet' && !link.__LiveReload_pendingRemoval && !link.href.match(/^blob:/)) {
              _results.push(link);
            }
          }
